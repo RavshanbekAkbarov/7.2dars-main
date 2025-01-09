@@ -20,6 +20,7 @@ import { auth } from "./firebase/config";
 // action
 import { action as RegisterAction } from "./pages/Register";
 import { action as LoginAction } from "./pages/Login";
+import {action as CreateAction} from "./pages/Create"
 
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -47,6 +48,7 @@ function App() {
         {
           path: "/create",
           element: <Create />,
+          action: CreateAction,
         },
       ],
     },

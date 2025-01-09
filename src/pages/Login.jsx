@@ -3,6 +3,7 @@ import { Link, useActionData, Form } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useLogin } from "../hooks/useLogin";
+import { useSelector } from "react-redux";
 
 export const action = async ({ request }) => {
   const form = await request.formData();
@@ -13,6 +14,7 @@ export const action = async ({ request }) => {
 };
 
 function Login() {
+  const { isPending } = useSelector((store) => store.user);
   const { loginWithEmailandPassword } = useLogin();
   const data = useActionData();
   useEffect(() => {
@@ -46,7 +48,9 @@ function Login() {
           name="password"
         />
         <div className="my-5">
-          <button className="btn btn-warning btn-block">Login</button>
+          {!isPending && (
+            <button className="btn btn-warning btn-block">Login</button>
+          )}
         </div>
         <div className="text-center ">
           <p>
