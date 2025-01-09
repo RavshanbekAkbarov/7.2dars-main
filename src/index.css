@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav-item .avtive {
+    @apply bg-white text-black;
+  }
+}
