@@ -10,6 +10,9 @@ import { useRegister } from "../hooks/useRegister";
 
 //utilis
 import { validateSignupOrLoginData } from "../utilis";
+import { Button } from "../components/Button";
+import { isPending } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 
 export const action = async ({ request }) => {
   const form = await request.formData();
@@ -21,6 +24,8 @@ export const action = async ({ request }) => {
 };
 
 function Register() {
+  const { isPending } = useSelector((store) => store.user);
+
   const [error, setError] = useState({
     displayName: "",
     email: "",
@@ -60,7 +65,6 @@ function Register() {
       // registerWithEmailEndPassword(data.displayName, data.email, data.password);
     }
   }, [signupActionData]);
-  console.log(error);
 
   return (
     <div
@@ -110,7 +114,13 @@ function Register() {
         />
 
         <div className="my-5 flex flex-col gap-3">
-          <button className="btn btn-warning btn-block">Register</button>
+          <Button
+            loading={isPending}
+            type="warning"
+            className="btn btn-warning btn-block"
+          >
+            Register
+          </Button>
         </div>
         <div className="text-center ">
           <p>

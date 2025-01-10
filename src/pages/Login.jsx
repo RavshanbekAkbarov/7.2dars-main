@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useLogin } from "../hooks/useLogin";
 import { useSelector } from "react-redux";
+import { Button } from "../components/Button";
 
 export const action = async ({ request }) => {
   const form = await request.formData();
@@ -48,9 +49,12 @@ function Login() {
           name="password"
         />
         <div className="my-5">
-          {!isPending && (
+          {/* {!isPending && (
             <button className="btn btn-warning btn-block">Login</button>
-          )}
+          )} */}
+          <Button loading={isPending} type="warning">
+            Login
+          </Button>
         </div>
         <div className="text-center ">
           <p>

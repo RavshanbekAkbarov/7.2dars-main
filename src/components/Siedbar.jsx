@@ -4,10 +4,12 @@ import { NavLink } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { MdAddCircle } from "react-icons/md";
 import { GoProjectRoadmap } from "react-icons/go";
+import { isPending } from "@reduxjs/toolkit";
+import { Button } from "./Button";
 
 function Siedbar() {
   const { logout } = useLogout();
-  const { user } = useSelector((store) => store.user);
+  const { user, isPending } = useSelector((store) => store.user);
   return (
     <div className="bg-violet-400 w-[400px]  text-white flex flex-col">
       <Avatar user={user} />
@@ -44,9 +46,15 @@ function Siedbar() {
         </li>
       </ul>
       <div className="mb-10 flex justify-center">
-        <button className="btn btn-primary" onClick={logout}>
+        <Button
+          type="primary"
+          onClick={logout}
+          loading={isPending}
+              className="bg-indigo-600 font-bold py-3 px-16 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+
+        >
           Logout
-        </button>
+        </Button>
       </div>
     </div>
   );
