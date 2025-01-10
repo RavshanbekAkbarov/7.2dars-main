@@ -23,7 +23,7 @@ export function useRegister() {
       online: true,
     });
 
-    dispatch(login(profile.user));
+    dispatch(login(res.user));
   };
   return { registerWithEmailEndPassword };
 }
