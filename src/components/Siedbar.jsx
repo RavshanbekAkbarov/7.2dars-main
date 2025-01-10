@@ -9,7 +9,7 @@ function Siedbar() {
   const { logout } = useLogout();
   const { user } = useSelector((store) => store.user);
   return (
-    <div className="bg-violet-400 h-screen w-[400px]  text-white flex flex-col">
+    <div className="bg-violet-400 w-[400px]  text-white flex flex-col">
       <Avatar user={user} />
       <ul className="flex flex-col pl-10 mb-auto">
         <li className="nav-item">
@@ -44,7 +44,9 @@ function Siedbar() {
         </li>
       </ul>
       <div className="mb-10 flex justify-center">
-        <button onClick={logout}>Logout</button>
+        <button className="btn btn-primary" onClick={logout}>
+          Logout
+        </button>
       </div>
     </div>
   );
