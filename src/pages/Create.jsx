@@ -38,7 +38,7 @@ function Create() {
   const navigate = useNavigate();
   const { addDocument } = useFireStore();
   const { doc } = useCollection("users");
-
+  const createActionData = useActionData();
   const [assignedUsers, setAssignedUsers] = useState(null);
   const [projectType, setProjectType] = useState(null);
   const [users, setUsers] = useState([]);
@@ -46,14 +46,19 @@ function Create() {
 
   useEffect(() => {
     setUsers(
-      doc?.map((document) => ({
-        value: { ...document },
-        label: document.displayName,
-      }))
+      doc?.map((document) => {
+        return { value: { ...document }, label: document.displayName };
+      })
     );
   }, [doc]);
 
-  const createActionData = useActionData();
+  const selectProjectType = (type) => {
+    setProjectType(type);
+  };
+
+  const selectUser = (user) => {
+    setAssignedUsers(user);
+  };
 
   useEffect(() => {
     if (createActionData) {
@@ -117,11 +122,11 @@ function Create() {
             </span>
           </div>
           <Select
-            onChange={setProjectType}
+            onChange={selectProjectType}
             options={ProjectTypes}
             components={animatedComponents}
-            isMulti
             className={`${error.projectType ? "border-red-500" : ""}`}
+            isMulti
           />
           {error.projectType && (
             <p className="text-error text-sm mt-1">{error.projectType}</p>
@@ -134,7 +139,7 @@ function Create() {
             </span>
           </div>
           <Select
-            onChange={setAssignedUsers}
+            onChange={selectUser}
             options={users}
             components={animatedComponents}
             isMulti
@@ -145,9 +150,7 @@ function Create() {
           )}
         </label>
         <div className="flex justify-end">
-          <button className="text-white btn btn-activ w-full mb-6">
-            Add Project
-          </button>
+          <button className=" btn btn-activ w-full mb-6">Add Project</button>
         </div>
       </Form>
     </div>
