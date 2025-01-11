@@ -1,3 +1,5 @@
+import { useActionData } from "react-router-dom";
+
 export function validateSignupOrLoginData(actionData, isSignup = false) {
   if (!actionData) {
     return { valid: false, errors: { general: "No data provided." } };
@@ -35,86 +37,41 @@ export function validateSignupOrLoginData(actionData, isSignup = false) {
   return { valid: false, errors };
 }
 
-// export function validateProjectData(projectData) {
-//   if (!projectData) {
-//     return {
-//       valid: false,
-//       errors: { general: "Please provide project data." },
-//     };
-//   }
+export function validateCreateData(actionData) {
+  if (!actionData) {
+    return { valid: false, errors: { general: "No data provided." } };
+  }
 
-//   const { name, dueDate, details, category, assignedUsersList } = projectData;
-//   const errors = {};
+  const { name, description, dueTo, assignedUsers, projectType } = actionData;
+  const errors = {};
 
-//   // Name validation
-//   if (!name || name.trim().length < 3) {
-//     errors.name = "Project name should be at least 3 characters long.";
-//   }
+  // Name validation
+  if (!name || name.trim().length < 3) {
+    errors.name = "Project name must be at least 3 characters long.";
+  }
 
-//   // Due date validation
-//   if (!dueDate || isNaN(dueDate.seconds) || isNaN(dueDate.nanoseconds)) {
-//     errors.dueDate = "Please provide a valid due date.";
-//   }
+  // Description validation
+  if (!description || description.trim().length < 5) {
+    errors.description =
+      "Project description must be at least 5 characters long.";
+  }
 
-//   // Details validation
-//   if (!details || details.trim().length < 10) {
-//     errors.details = "Project details should be at least 10 characters long.";
-//   }
+  // Due Date validation
+  if (!dueTo || isNaN(new Date(dueTo).getTime())) {
+    errors.dueTo = "A valid due date is required.";
+  }
 
-//   // Category validation
-//   if (!category || category.value < 3) {
-//     errors.category = "Category should be at least 3 characters long.";
-//   }
+  // Assigned Users validation
+  if (!assignedUsers || assignedUsers.length === 0) {
+    errors.assignedUsers = "Please assign at least one user.";
+  }
 
-//   // AssignedUsersList validation
-//   if (!Array.isArray(assignedUsersList) || assignedUsersList.length === 0) {
-//     errors.assignedUsersList =
-//       "Please assign at least one user to the project.";
-//   }
+  // Project Type validation
+  if (!projectType || projectType.length === 0) {
+    errors.projectType = "Please select at least one project type.";
+  }
 
-//   if (Object.keys(errors).length === 0) {
-//     return { valid: true };
-//   }
-
-//   return { valid: false, errors };
-// }
-
-// export function formatCommentTime(commentTime) {
-//   const date = new Date(
-//     commentTime.seconds * 1000 + Math.floor(commentTime.nanoseconds / 1e6)
-//   );
-//   const now = new Date();
-
-//   const timeDiff = now - date;
-//   const oneDay = 24 * 60 * 60 * 1000;
-
-//   if (timeDiff < oneDay && now.getDate() === date.getDate()) {
-//     return {
-//       day: "Today",
-//       hour: `${date.getHours().toString().padStart(2, "0")}:${date
-//         .getMinutes()
-//         .toString()
-//         .padStart(2, "0")}`,
-//     };
-//   }
-
-//   if (timeDiff < 2 * oneDay && now.getDate() - date.getDate() === 1) {
-//     return {
-//       day: "Yesterday",
-//       hour: `${date.getHours().toString().padStart(2, "0")}:${date
-//         .getMinutes()
-//         .toString()
-//         .padStart(2, "0")}`,
-//     };
-//   }
-
-//   return {
-//     day: `${date.getDate().toString().padStart(2, "0")}.${(date.getMonth() + 1)
-//       .toString()
-//       .padStart(2, "0")}.${date.getFullYear()}`,
-//     hour: `${date.getHours().toString().padStart(2, "0")}:${date
-//       .getMinutes()
-//       .toString()
-//       .padStart(2, "0")}`,
-//   };
-// }
+  return Object.keys(errors).length === 0
+    ? { valid: true }
+    : { valid: false, errors };
+}

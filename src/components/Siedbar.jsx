@@ -11,7 +11,7 @@ function Siedbar() {
   const { logout } = useLogout();
   const { user, isPending } = useSelector((store) => store.user);
   return (
-    <div className="bg-violet-400 w-[400px]  text-white flex flex-col">
+    <div className="bg-violet-400 w-[400px] min-h-screen    text-white flex flex-col">
       <Avatar user={user} />
       <ul className="flex flex-col pl-10 mb-auto">
         <li className="nav-item">
@@ -50,8 +50,7 @@ function Siedbar() {
           type="primary"
           onClick={logout}
           loading={isPending}
-              className="bg-indigo-600 font-bold py-3 px-16 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-
+          className="bg-indigo-600 font-bold py-3 px-16 rounded-lg shadow-md hover:shadow-lg transition-shadow"
         >
           Logout
         </Button>

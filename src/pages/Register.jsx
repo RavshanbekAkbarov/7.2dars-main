@@ -48,21 +48,6 @@ function Register() {
       } else {
         setError(errors);
       }
-
-      // if (!data.password || !data.email || !data.displayName) {
-      //   toast.error("barcha maydonlar to'ldirilishi shart!");
-      // }
-
-      // if (data.password.length < 6) {
-      //   toast.error("Parol 6 ta belgidan ko'p bo'lishi kerak!");
-      //   return;
-      // }
-
-      // if (data.password !== data.repassword) {
-      //   toast.error("Parollar bir xil emas!");
-      //   return;
-      // }
-      // registerWithEmailEndPassword(data.displayName, data.email, data.password);
     }
   }, [signupActionData]);
 
