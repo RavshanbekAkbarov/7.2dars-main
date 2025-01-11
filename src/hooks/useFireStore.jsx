@@ -50,7 +50,7 @@ function useFireStore(collectionName) {
       toast.success("Document added successfully!");
     } catch (error) {
       dispatch({ type: "ERROR", payload: error.message });
-      toast.error("Error adding document!");
+      // toast.error("Error adding document!");
     }
   };
 

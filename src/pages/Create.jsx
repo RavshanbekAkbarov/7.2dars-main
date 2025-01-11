@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { serverTimestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 // Firestore
 import { useFireStore } from "../hooks/useFireStore";
@@ -34,7 +35,7 @@ const ProjectTypes = [
 ];
 
 function Create() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const { addDocument } = useFireStore();
   const { doc } = useCollection("users");
 
@@ -60,9 +61,7 @@ function Create() {
         ...createActionData,
         assignedUsers,
         projectType,
-      }).then(() => {
-        navigate(' /')
-      })
+      });
 
       if (valid) {
         addDocument("projects", {
@@ -70,8 +69,9 @@ function Create() {
           assignedUsers,
           projectType,
           createdAt: serverTimestamp(new Date()),
+        }).then(() => {
+          navigate("/");
         });
-        alert("Project successfully added!");
       } else {
         setError(errors);
       }

@@ -7,7 +7,7 @@ function FormInput({ type, label, name, placeholder, error, errorText }) {
         type={type}
         name={name}
         placeholder={placeholder}
-        className={`input input-bordered w-full ${error} `} 
+        className={`input input-bordered w-full ${error} `}
       />
       {errorText && (
         <div className="label">
