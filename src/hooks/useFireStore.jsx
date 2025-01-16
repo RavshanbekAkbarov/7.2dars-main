@@ -1,60 +1,48 @@
-import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { toast } from "react-toastify";
-import { useReducer } from "react";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
-const initialState = {
-  document: null,
-  isPending: false,
-  error: null,
-  success: false,
-};
-
-const changeState = (state, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case "ADD_DOCUMENT":
-      return {
-        document: payload,
-        isPending: false,
-        error: null,
-        success: true,
-      };
-    case "ERROR":
-      return {
-        document: null,
-        isPending: false,
-        error: payload,
-        success: false,
-      };
-    case "IS_PENDING":
-      return {
-        ...state,
-        isPending: true,
-        error: null,
-      };
-    default:
-      return state;
-  }
-};
-
-function useFireStore(collectionName) {
-  const [state, dispatch] = useReducer(changeState, initialState);
-
+export function useFireStore(collectionName) {
+  // Add a document to Firestore
   const addDocument = async (data) => {
-    dispatch({ type: "IS_PENDING" });
-
     try {
-      let newDoc = await addDoc(collection(db, collectionName), data);
-      dispatch({ type: "ADD_DOCUMENT", payload: newDoc });
-      toast.success("Document added successfully!");
+      const docRef = await addDoc(collection(db, collectionName), data);
+      console.log("Document added successfully:", docRef.id);
+      return docRef;
     } catch (error) {
-      dispatch({ type: "ERROR", payload: error.message });
-      // toast.error("Error adding document!");
+      console.error("Error adding document:", error);
+      throw new Error(error.message);
     }
   };
 
-  return { ...state, addDocument };
-}
+  // Update a document in Firestore
+  const updateDocument = async (data, id) => {
+    try {
+      const docRef = doc(db, collectionName, id);
+      await updateDoc(docRef, data);
+      console.log("Document updated successfully");
+    } catch (error) {
+      console.error("Error updating document:", error);
+      throw new Error(error.message);
+    }
+  };
 
-export { useFireStore };
+  // Delete a document from Firestore
+  const deleteDocument = async (id) => {
+    try {
+      const docRef = doc(db, collectionName, id);
+      await deleteDoc(docRef);
+      console.log("Document deleted successfully");
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      throw new Error(error.message);
+    }
+  };
+
+  return { addDocument, updateDocument, deleteDocument };
+}

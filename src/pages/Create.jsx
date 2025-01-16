@@ -16,15 +16,6 @@ import { useCollection } from "../hooks/useCollection";
 // Utilis
 import { validateCreateData } from "../utilis";
 
-export async function action({ request }) {
-  const form = await request.formData();
-  const name = form.get("name");
-  const description = form.get("description");
-  const dueTo = form.get("dueTo");
-
-  return { name, description, dueTo };
-}
-
 const animatedComponents = makeAnimated();
 
 const ProjectTypes = [
@@ -34,9 +25,18 @@ const ProjectTypes = [
   { value: "marketing", label: "Marketing" },
 ];
 
+export async function action({ request }) {
+  const form = await request.formData();
+  const name = form.get("name");
+  const description = form.get("description");
+  const dueTo = form.get("dueTo");
+
+  return { name, description, dueTo };
+}
+
 function Create() {
   const navigate = useNavigate();
-  const { addDocument } = useFireStore();
+  const { addDocument } = useFireStore("projects");
   const { doc } = useCollection("users");
   const createActionData = useActionData();
   const [assignedUsers, setAssignedUsers] = useState(null);
@@ -45,11 +45,14 @@ function Create() {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    setUsers(
-      doc?.map((document) => {
-        return { value: { ...document }, label: document.displayName };
-      })
-    );
+    if (doc) {
+      setUsers(
+        doc.map((user) => ({
+          value: user,
+          label: `${user.displayName} (${user.email})`,
+        }))
+      );
+    }
   }, [doc]);
 
   const selectProjectType = (type) => {
@@ -69,12 +72,13 @@ function Create() {
       });
 
       if (valid) {
-        addDocument("projects", {
+        addDocument({
           ...createActionData,
-          assignedUsers,
-          projectType,
-          createdAt: serverTimestamp(new Date()),
+          assignedUsers: assignedUsers?.map((u) => u.value),
+          projectType: projectType?.map((type) => type.value),
+          createdAt: serverTimestamp(),
         }).then(() => {
+          toast.success("Project added successfully!");
           navigate("/");
         });
       } else {
@@ -84,74 +88,65 @@ function Create() {
   }, [createActionData, assignedUsers, projectType]);
 
   return (
-    <div className="max-w-[600px] bg-sky-500 rounded-2xl m-auto mt-10">
-      <h2 className="text-3xl font-semibold text-center pt-5 text-white">
-        Create a new Project
+    <div className="max-w-[600px] bg-gray-900 text-white rounded-2xl m-auto mt-10 shadow-xl p-6">
+      <h2 className="text-3xl font-bold text-center pb-4 border-b border-gray-600">
+        Create a New Project
       </h2>
-      <Form
-        action=""
-        method="post"
-        className="flex flex-col gap-6 max-w-[500px] ml-8 mt-10"
-      >
+      <Form action="" method="post" className="flex flex-col gap-6 mt-6">
         <FormInput
-          label="Project name"
+          label="Project Name"
           type="text"
-          placeholder="Write project name here"
+          placeholder="Enter project name"
           name="name"
           error={error.name && "input-error"}
           errorText={error.name}
+          className="bg-gray-800 text-white border border-gray-700 rounded-lg p-3"
         />
         <FormTextare
-          label="Project description"
-          placeholder="Type here"
+          label="Project Description"
+          placeholder="Type project description"
           name="description"
           error={error.description && "input-error"}
           errorText={error.description}
+          className="bg-gray-800 text-white border border-gray-700 rounded-lg p-3"
         />
         <FormInput
-          label="Set due to"
+          label="Set Due Date"
           type="date"
           name="dueTo"
           error={error.dueTo && "input-error"}
           errorText={error.dueTo}
+          className="bg-gray-800 text-white border border-gray-700 rounded-lg p-3"
         />
         <label className="form-control">
-          <div className="label">
-            <span className="label-text text-white text-base">
-              Project type:
-            </span>
-          </div>
+          <span className="label-text text-base mb-1 block">Project Type:</span>
           <Select
             onChange={selectProjectType}
             options={ProjectTypes}
             components={animatedComponents}
-            className={`${error.projectType ? "border-red-500" : ""}`}
             isMulti
+            className="text-black rounded-lg"
           />
           {error.projectType && (
-            <p className="text-error text-sm mt-1">{error.projectType}</p>
+            <p className="text-red-500 text-sm mt-1">{error.projectType}</p>
           )}
         </label>
         <label className="form-control">
-          <div className="label">
-            <span className="label-text text-white text-base">
-              Assign user:
-            </span>
-          </div>
+          <span className="label-text text-base mb-1 block">Assign Users:</span>
           <Select
             onChange={selectUser}
             options={users}
             components={animatedComponents}
             isMulti
-            className={`${error.assignedUsers ? "border-red-500" : ""}`}
+            className="text-black  rounded-lg"
           />
           {error.assignedUsers && (
-            <p className="text-error text-sm mt-1">{error.assignedUsers}</p>
+            <p className="text-red-500 text-sm mt-1">{error.assignedUsers}</p>
           )}
         </label>
-        <div className="flex justify-end">
-          <button className=" btn btn-activ w-full mb-6">Add Project</button>
-        </div>
+        <button className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold shadow-md hover:bg-blue-500 transition-all mt-4">
+          Add Project
+        </button>
       </Form>
     </div>
   );

@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Create from "./pages/Create";
+import About from "./pages/About";
 
 //components
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -20,14 +21,13 @@ import { auth } from "./firebase/config";
 // action
 import { action as RegisterAction } from "./pages/Register";
 import { action as LoginAction } from "./pages/Login";
-import {action as CreateAction} from "./pages/Create"
+import { action as CreateAction } from "./pages/Create";
 
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { login, authReadyAct } from "./app/features/userSlice";
 import { useDispatch } from "react-redux";
-
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +44,10 @@ function App() {
         {
           index: true,
           element: <Home />,
+        },
+        {
+          path: "/about/:id",
+          element: <About />,
         },
         {
           path: "/create",
