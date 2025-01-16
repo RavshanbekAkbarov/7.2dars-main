@@ -9,7 +9,11 @@ function Home() {
   }
 
   if (!documents || documents.length === 0) {
-    return <p className="text-gray-500 text-center">No projects available.</p>;
+    return (
+      <p className="text-gray-500 text-center mt-2 text-red-400 font-medium ">
+        Sizda hali loyiha mavjud emas:(
+      </p>
+    );
   }
 
   return (
